@@ -33,7 +33,7 @@ recital_x_banda=[-1 for x in range(M)]
 
 # carga de recitales y sus preferencias
 for x in range(1,N+1):
-	filename = 'dataset_5/recital_'+str(x)
+	filename = 'dataset_1/recital_'+str(x)
 	recital = open(filename)
 	
 	recitales_restantes.append(x)
@@ -45,7 +45,7 @@ for x in range(1,N+1):
 	
 # carga de bandas y sus preferencias
 for x in range(1,M+1):
-	filename = 'dataset_5/banda_'+str(x)
+	filename = 'dataset_1/banda_'+str(x)
 	banda = open(filename)
 	y = 0
 	for line in banda:
