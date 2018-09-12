@@ -2,16 +2,58 @@
 
 ## Integrantes del grupo
 
-* Errázquin Martín, padrón 98017
-* **hola1**
-* **hola2**
-* **hola3**
+* Bollero, Carlos  93542
+* Czop, Guillermo 98059
+* Errázquin, Martín 98017
+* Escobar, Cynthia 85826
 
 ## Parte 1: Variante de Gale Shapley
 
 ### 1. Pseudocódigo
 
-**hola4**
+**S** = {}
+
+Mientras haya recitales que todavía puedan contratar bandas y no se haya comunicado con todas las bandas:
+
+​	Seleccionar recital **r** de los que cumplen la condición anterior
+
+​	Sea **b** la banda que mejor rankea en la lista de preferencias de **r**, y **b** no fue contactada previamente por **r** 
+
+​	Si **b** no participa en ningún recital -> se agrega **(b, r)**  a **S**
+
+​	Si **b** ya participa en  **k** recitales, con **k** < **Y** entonces:
+
+​		se agrega **(b, r)**  a **S**
+
+​		se aumenta la cantidad de bandas que contrató el recital **r**
+
+​		se aumenta la cantidad de recitales que aceptó la banda **b**
+
+​	Si **b** ya participa en  **Y** recitales, entonces:
+
+​		Sea **~r** el recital menos preferido de **b** 
+
+​		Por cada recital **r'** previamente aceptado por **b**
+
+​			Si **b** prefiere más al recital existente **r'** que al nuevo **r**, continúo
+
+​			Si **b** prefiere más el nuevo recital **r** que al existente **r'** 
+
+​				Si **~r** no está seteado o si **b** prefiere más a **~r** que a **r' **-> **~r** = **r'**
+
+​		Si existe **~r** entonces:
+
+​			 **b** acepta a **r**  ->  se agrega **(b, r)**  a **S**
+
+​			se aumenta la cantidad de bandas que contrató el recital **r**
+
+​			**b** rechaza a **~r**
+
+​			**~r** se encola para ser procesada posteriormente 
+
+​			se disminuye la cantidad de bandas que tiene contratadas **~r**
+
+​		
 
 ### 2. Análisis de complejidad
 
