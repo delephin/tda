@@ -15,49 +15,51 @@
 
 Mientras haya recitales que todavía puedan contratar bandas y no se haya comunicado con todas las bandas:
 
-​	Seleccionar recital **r** de los que cumplen la condición anterior
+	Seleccionar recital **r** de los que cumplen la condición anterior
 
 ​	Sea **b** la banda que mejor rankea en la lista de preferencias de **r**, y **b** no fue contactada previamente por **r**
 
-​	Si **b** no participa en ningún recital -> se agrega **(b, r)**  a **S**
+​	Si **b** participa en  **k** recitales, con 0<**k** < **Y** entonces:
 
-​	Si **b** ya participa en  **k** recitales, con **k** < **Y** entonces:
+		se agrega **(b, r)**  a **S**
 
-​		se agrega **(b, r)**  a **S**
+		se aumenta la cantidad de bandas que contrató el recital **r**
 
-​		se aumenta la cantidad de bandas que contrató el recital **r**
+		se aumenta la cantidad de recitales que aceptó la banda **b**
 
-​		se aumenta la cantidad de recitales que aceptó la banda **b**
+	Si **b** ya participa en  **Y** recitales, entonces:
 
-​	Si **b** ya participa en  **Y** recitales, entonces:
+		Sea **~r** el recital menos preferido de **b**
 
-​		Sea **~r** el recital menos preferido de **b**
+		Por cada recital **r'** previamente aceptado por **b**
 
-​		Por cada recital **r'** previamente aceptado por **b**
+​			Si **b** prefiere más al recital **r'** que al nuevo **r**, continúo
 
-​			Si **b** prefiere más al recital existente **r'** que al nuevo **r**, continúo
+			Si **b** prefiere más el nuevo recital **r** que al existente **r'**
 
-​			Si **b** prefiere más el nuevo recital **r** que al existente **r'**
-
-​				Si **~r** no está seteado o si **b** prefiere más a **~r** que a **r' **-> **~r** = **r'**
+				Si **~r** no está seteado o si **b** prefiere más a **~r** que a **r' **-> **~r** = **r'**
 
 ​		Si existe **~r** entonces:
 
-​			 **b** acepta a **r**  ->  se agrega **(b, r)**  a **S**
-
-​			se aumenta la cantidad de bandas que contrató el recital **r**
-
-​			**b** rechaza a **~r**
+​                        **b** rechaza a **~r** ->  quita  **(b,~r)**  de **S**
 
 ​			**~r** se encola para ser procesada posteriormente
 
 ​			se disminuye la cantidad de bandas que tiene contratadas **~r**
 
-​		
+​			 **b** acepta a **r**  ->  se agrega **(b, r)**  a **S**
+
+​			se aumenta la cantidad de bandas que contrató el recital **r**
+
+retorna **S**		
 
 ### 2. Análisis de complejidad
 
-**hola5**
+Partiendo de que la complejidad de Gale-Shapley es O(n^2), podemos decir que para esta variante tenemos:
+
+1. Inicialmente, una complejidad O(NxM) si cada recital pudiera contratar sólo 1 banda, y una banda sólo pudiera participar en 1 recital
+2. Luego, si agregamos la variación de que un recital puede contratar X bandas, se iterará X veces por cada recital. Podemos decir entonces que la complejidad sería O(NxXxM)
+3. Finalmente, si agregamos la variación de que cada banda puede participar de Y recitales, en el peor de los casos deberíamos validar contra cada uno de los Y recitales ya aceptados para comprobar que una propuesta nueva no es mejor. Con esto podemos decir que la complejidad final sería O(NxXxMxY)
 
 ### 3. Condiciones para solución estable y/o perfecta
 
