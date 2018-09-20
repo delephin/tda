@@ -63,7 +63,16 @@ Partiendo de que la complejidad de Gale-Shapley es O(n^2), podemos decir que par
 
 ### 3. Condiciones para solución estable y/o perfecta
 
-**hola6**
+Para esta versión de Gale-Shapley consideramos que una solución es perfecta si todo recital logra contratar alguna banda, y toda banda puede participar en algún recital.
+
+En el único caso en el que habrá match perfecto es cuando N==M y X==Y.
+
+Para N==M o N<>M:
+
+- X < Y, no habrá match perfecto ya que algunas bandas podrían quedar sin participar en algún recital.
+- X > Y, no habrá match perfecto ya que algunos recitales podrían quedarse sin bandas.
+
+Independientemente del la cantidad de bandas y recitales y de las restricciones, la solución es estable ya que los pares banda-recital formados son inmejorables, incluso en los casos en los que quedan recitales o bandas libres. 
 
 ### 4. Rankings no estrictos
 
