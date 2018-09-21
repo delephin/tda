@@ -31,11 +31,11 @@ Mientras haya recitales que todavía puedan contratar bandas y no se haya comuni
 
 		Sea **~r** el recital menos preferido de **b**
 
-		Por cada recital **r'** previamente aceptado por **b**
+​		Por cada recital **r'** previamente aceptado por **b**
 
 ​			Si **b** prefiere más al recital **r'** que al nuevo **r**, continúo
 
-			Si **b** prefiere más el nuevo recital **r** que al existente **r'**
+​			Si **b** prefiere más el nuevo recital **r** que al existente **r'**
 
 				Si **~r** no está seteado o si **b** prefiere más a **~r** que a **r' **-> **~r** = **r'**
 
@@ -76,7 +76,55 @@ Independientemente del la cantidad de bandas y recitales y de las restricciones,
 
 ### 4. Rankings no estrictos
 
-**hola7**
+El algoritmo actual no soporta que un organizador tenga la misma preferencia para bandas diferentes (o visceversa) dado que nos basamos en el orden de inserción en las distintas estructuras de datos para determinar el orden de preferencia. Si se quisiera soportar este comportamiento, deberíamos cambiar las estructuras que estamos utilizando actualmente.
+
+Suponiendo que el algoritmo soportara un mismo orden de preferencia para varias bandas/organizadores, y que el mecanismo de desempate sea arrojar una moneda entonces no alcanzaría con preguntar si se prefiere más a uno u a otro (recital/banda) ya que también podría preferirse a ambos en un mismo grado, y en ese caso se arrojaría la moneda para resolver la preferencia. Es decir:
+
+**S** = {}
+
+Mientras haya recitales que todavía puedan contratar bandas y no se haya comunicado con todas las bandas:
+
+​	Seleccionar recital **r** de los que cumplen la condición anterior
+
+​	Sea **b** la banda que mejor rankea en la lista de preferencias de **r**, y **b** no fue contactada previamente por **r**
+
+​	Si **b** participa en  **k** recitales, con 0<**k** < **Y** entonces:
+
+​		se agrega **(b, r)**  a **S**
+
+		se aumenta la cantidad de bandas que contrató el recital **r**
+
+​		se aumenta la cantidad de recitales que aceptó la banda **b**
+
+​	Si **b** ya participa en  **Y** recitales, entonces:
+
+​		Sea **~r** el recital menos preferido de **b**
+
+​		Por cada recital **r'** previamente aceptado por **b**
+
+==​			Si **b** prefiere a **r** y **r'** en un mismo grado:==
+
+==​				Arrojo moneda, determino a quién a quién prefiere más y evalúo contra las condiciones ***(a)*** y ***(b)***==
+
+​			Si **b** prefiere más al recital **r'** que al nuevo **r**, continúo ***(a)***
+
+​			Si **b** prefiere más el nuevo recital **r** que al existente **r'** ***(b)***
+
+​				Si **~r** no está seteado o si **b** prefiere más a **~r** que a **r' **-> **~r** = **r'**
+
+​		Si existe **~r** entonces:
+
+​                        **b** rechaza a **~r** ->  quita  **(b,~r)**  de **S**
+
+			**~r** se encola para ser procesada posteriormente
+
+			se disminuye la cantidad de bandas que tiene contratadas **~r**
+
+			 **b** acepta a **r**  ->  se agrega **(b, r)**  a **S**
+
+			se aumenta la cantidad de bandas que contrató el recital **r**
+
+retorna **S**		
 
 ### 5. Simulaciones
 
