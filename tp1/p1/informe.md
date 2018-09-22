@@ -72,11 +72,16 @@ Para N==M o N<>M:
 - X < Y, no habrá match perfecto ya que algunas bandas podrían quedar sin participar en algún recital.
 - X > Y, no habrá match perfecto ya que algunos recitales podrían quedarse sin bandas.
 
-Independientemente del la cantidad de bandas y recitales y de las restricciones, la solución es estable ya que los pares banda-recital formados son inmejorables, incluso en los casos en los que quedan recitales o bandas libres. 
+Independientemente del la cantidad de bandas y recitales y de las restricciones, la solución es estable ya que los pares banda-recital formados son inmejorables, incluso en los casos en los que quedan recitales o bandas libres.
 
 ### 4. Rankings no estrictos
 
 El algoritmo actual no soporta que un organizador tenga la misma preferencia para bandas diferentes (o visceversa) dado que nos basamos en el orden de inserción en las distintas estructuras de datos para determinar el orden de preferencia. Si se quisiera soportar este comportamiento, deberíamos cambiar las estructuras que estamos utilizando actualmente.
+
+Para este tipo de problema donde existe la posibilidad de indiferencia o empate en el ranking de preferencias, quedan determinados distintos niveles de estabilidad, donde el emparejamiento puede ser *débilmente estable*, *fuertemente estable* o *super-estable*.
+* ***Debilmente estable:*** si no existe un par (b, r) no unido, tal que ambos se prefieran estrictamente más que su emparejamiento actual.
+* ***Fuertemente estable:*** si no existe un par (b, r) no unido, tal que uno de los dos prefiere estrictamente más al otro antes que a su emparejamiento actual, y el otro es al menos indiferente.
+* ***Super-estable:*** si no existe un par (b, r) no unido, que prefieren estar emparejados o a ambos les resulta indiferente.
 
 Suponiendo que el algoritmo soportara un mismo orden de preferencia para varias bandas/organizadores, y que el mecanismo de desempate sea arrojar una moneda entonces no alcanzaría con preguntar si se prefiere más a uno u a otro (recital/banda) ya que también podría preferirse a ambos en un mismo grado, y en ese caso se arrojaría la moneda para resolver la preferencia. Es decir:
 
