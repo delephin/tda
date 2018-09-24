@@ -24,6 +24,7 @@ if Y > N :
 	print("Error: No hay " + Y + " recitales configuradas.")
 	sys.exit(3)
 
+os.system('mkdir test')
 	
 start_time = time.time()
 	
