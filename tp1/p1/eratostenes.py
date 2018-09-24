@@ -1,6 +1,7 @@
 import sys
 import array
 import math
+import time
 
 BRUTE_FORCE_METHOD = "F"
 EFFICIENT_METHOD = "E"
@@ -21,13 +22,15 @@ if N <= 1:
     sys.exit(1)
 
 def efficient_primes(n):
+    startTime = time.time()
     X = array.array('b', [True] * n)
     for i in range(2,int(math.sqrt(n))+1):
         for j in range(i**2, n, i):
             X[j] = False
-    return [m for m in range(2,n) if X[m] == True]
+    return [[m for m in range(2,n) if X[m] == True], "Elapsed time: "+	str(time.time() - startTime)]
 
 def brute_force_primes(n):
+    startTime = time.time()
     L = []
     for i in range(2,n):
         es_primo = True
@@ -37,7 +40,7 @@ def brute_force_primes(n):
                 break
         if es_primo is True:
             L.append(i)
-    return L
+    return [L, "Elapsed time: "+	str(time.time() - startTime)]
 
 if __name__ == '__main__':
     if METHOD == EFFICIENT_METHOD:
