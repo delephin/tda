@@ -4,6 +4,8 @@ import sys
 import time
 import math
 import os
+import operator
+import functools
 import numpy as np
 from collections import deque, namedtuple
 
@@ -11,90 +13,180 @@ Edge = namedtuple('Edge', 'start, end, distance')
 Coordinate = namedtuple('Coordinate', 'x,y')
 WeightedPath = namedtuple('WeightedPath', 'path,weight')
 
-def make_edge(start, end, distance=1):
-  return Edge(start, end, distance)
-  
-class Graph():
+coordinates_dict = {}
+centroid = Coordinate(0,0)
 
-	def __init__(self, edges):
-		self.edges = edges
-		
-	def add_edge(self, n1, n2, distance=1):
-		self.edges.append(Edge(start=n1, end=n2, distance=distance))
-
-	def add_edge2(self, edge):
-		self.edges.append(edge)
-			
-	def remove_edge(self, edge):
-		self.edges.remove(edge)
+#####		
+def get_key(item):
+    return item.x	
 	
-	@property
-	def adjacents(self):
-		adjacents = {vertex: set() for vertex in self.vertices}
-		for edge in self.edges:
-			adjacents[edge.start].add((edge.end, edge.distance))
-			adjacents[edge.end].add((edge.start, edge.distance))
-		return adjacents
-
-	@property
-	def vertices(self):
-		return set(
-			sum(
-				([edge.start, edge.end] for edge in self.edges), []
-			)
-		)
-
-	def dijkstra (self, s, t):
-		distances = {vertex: np.inf for vertex in self.vertices}
-		
-		previous_vertices = {
-			vertex: None for vertex in self.vertices
-        }		
-		
-		distances[s] = 0
-		
-		vertices = self.vertices.copy()
-		
-		while vertices:
-			current_vertex = min(vertices, key=lambda vertex: distances[vertex])
-			
-			if distances[current_vertex] == np.inf:
-				break
-		
-			for adjacent, distance in self.adjacents[current_vertex]:
-				alternative_route = distances[current_vertex] + distance
-				
-				if alternative_route < distances[adjacent]:
-					distances[adjacent] = alternative_route
-					previous_vertices[adjacent] = current_vertex
-					
-			vertices.remove(current_vertex)
-			
-		path, current_vertex = deque(), t
-		
-		while previous_vertices[current_vertex] is not None:
-			path.appendleft(current_vertex)
-			current_vertex = previous_vertices[current_vertex]
-		if path:
-			path.appendleft(current_vertex)
-		return path
-		
-		print("dijkstra %s" % distances)
-		
-def which_side_of_line (lineEndptA, lineEndptB, ptSubject):
-    return (ptSubject.x - lineEndptA.x) * (lineEndptB.y - lineEndptA.y) - (ptSubject.y - lineEndptA.y) * (lineEndptB.x - lineEndptA.x)
-
 def distance(p1, p2):
 	return math.sqrt(pow(p1.x-p2.x, 2) + pow(p1.y-p2.y, 2))
+
+## Checks whether the line is crossing the polygon, 
+# Se utiliza para saber de que lado esta el punto c con respecto
+# a la linea segmento de linea ab
+def orientation(a, b, c):
+	res = (b.y-a.y)*(c.x-a.x) - (c.y-a.y)*(b.x-a.x)
 	
-def fuerza_bruta(s, t, safe_points):
-	#print("fuerzabruta [%s] [%s] [%s]" % (s, t, safe_points))
+	if res == 0:
+		return 0
+	if res > 0:
+		return 1
+	return -1	
+
+def quad(p):
+	if (p.x >= 0 and p.y >= 0):
+		return 1
+	if (p.x <= 0 and p.y >= 0):
+		return 2
+	if (p.x <= 0 and p.y <= 0):
+		return 3
+	return 4
 	
+def counterclockwise_sorting(item1, item2):
+	result = 0
+	
+	p = Coordinate(x=(item1.x-centroid.x),y=(item1.y-centroid.y))
+	q = Coordinate(x=(item2.x-centroid.x),y=(item2.y-centroid.y))
+	
+	quad_item1=quad(p)
+	quad_item2=quad(q)
+	
+	if quad_item1 != quad_item2: 
+		result = -1 if quad_item1 < quad_item2 else 1
+	else:
+		result = -1 if (p.y*q.x < q.y*p.x) else 1
+	
+	return result
+
+def addCoordinates(a,b):
+	global coordinates_dict
+	
+	if a not in coordinates_dict[b]:
+		coordinates_dict[b].append(a)
+	if b not in coordinates_dict[a]:
+		coordinates_dict[a].append(b)
+		
+def merger(left_hull,right_hull):
+	global coordinates_dict
+	
+	len_left = len(left_hull)
+	len_right = len(right_hull)
+	
+	idx_righmost_a = 0
+	idx_leftmost_b = 0
+
+	for i in range(1,len_left):
+		if left_hull[i].x > left_hull[idx_righmost_a].x:
+			idx_righmost_a=i
+	
+	for i in range(1,len_right):
+		if right_hull[i].x < right_hull[idx_leftmost_b].x:
+			idx_leftmost_b=i
+	
+	#finding the upper tangent
+	inda = idx_righmost_a
+	indb = idx_leftmost_b
+	done = False
+	while not done:
+		done = True
+				
+		while (orientation(right_hull[indb], left_hull[inda], left_hull[(inda+1)%len_left]) >= 0):
+			inda = (inda+1)%len_left
+			
+		while (orientation(left_hull[inda],right_hull[indb],right_hull[(len_right+indb-1)%len_right]) <= 0):
+			indb = (len_right+indb-1)%len_right
+			done = False
+		
+	uppera = inda
+	upperb = indb
+	inda = idx_righmost_a
+	indb = idx_leftmost_b
+	done = 0
+
+	# The edge ab is a tangent if the two points about a and the two points about b are on the same side of ab.
+	
+	g = 0
+	# finding the lower tangent 
+	while not done:
+		done = 1
+		while (orientation(left_hull[inda], right_hull[indb], right_hull[(indb+1)%len_right])>=0): 
+			indb=(indb+1)%len_right 
+	
+		while orientation(right_hull[indb], left_hull[inda], left_hull[(len_left+inda-1)%len_left])<=0:
+			inda=(len_left+inda-1)%len_left
+			done=0
+	
+	lowera = inda
+	lowerb = indb
+	ret = []
+
+	# ret contains the convex hull after merging the two convex hulls 
+	# with the points sorted in anti-clockwise order 
+	ind = uppera
+		
+	last_point = left_hull[uppera]
+	ret.append(left_hull[uppera])
+	
+	while (ind != lowera):
+		ind = (ind+1)%len_left
+		new_point = left_hull[ind]
+		ret.append(new_point)
+		addCoordinates(new_point, last_point)
+		
+		last_point = new_point
+
+	ind = lowerb
+	
+	new_point = right_hull[lowerb]
+	
+	addCoordinates(new_point, last_point)
+	
+	last_point = new_point
+	
+	ret.append(right_hull[lowerb])
+	while ind != upperb:
+		ind = (ind+1)%len_right
+		new_point = right_hull[ind]
+		ret.append(new_point)
+		addCoordinates(new_point, last_point)
+		last_point = new_point
+	
+		addCoordinates(left_hull[uppera], last_point)
+	
+	return ret
+	
+def divide(s,t,points):
+	if len(points) < 6:
+		return fuerza_bruta(s,t,points)
+	
+	half = len(safe_points)//2
+	right=points[half:]
+	left=points[:half]
+
+	fuerza_bruta_der = divide(s,t,right)
+	fuerza_bruta_izq = divide(s,t,left)
+	
+	if (s not in coordinates_dict or len(coordinates_dict[s]) == 0):
+		print("ERROR: Convex Hull does not contain source.")
+		sys.exit(500)
+	
+	if (t not in coordinates_dict or len(coordinates_dict[t]) == 0):
+		print("ERROR: Convex Hull does not contain tail.")
+		sys.exit(500)
+	
+	coordinates_dict[s] = []
+		
+	merge = merger(fuerza_bruta_izq, fuerza_bruta_der)
+	
+	return merge
+#####
+
+def fuerza_bruta(s, t, safe_points):	
+	global centroid
+	global coordinates_dict
 	minimum_convex_hull = []
-	s_present = False
-	t_present = False
-	
-	coordinates_dict = { key: [] for key in safe_points}
 			
 	for i in range(0, len(safe_points)):
 		for j in range(0, len(safe_points)):
@@ -110,77 +202,79 @@ def fuerza_bruta(s, t, safe_points):
 				if k == i or k == j:
 					continue
 				
-				d = which_side_of_line(pointI, pointJ, safe_points[k])
+				d = orientation(pointI, pointJ, safe_points[k])
 				if d < 0:
 					allPointsOnTheRight = False
 					break
 			
 			if allPointsOnTheRight:
-				e = Edge(start=pointI, end=pointJ, distance=distance(pointI, pointJ))
-								
 				if pointJ not in coordinates_dict[pointI] and safe_points[i] != pointJ:
 					coordinates_dict[pointI].append(pointJ)
 				if pointI not in coordinates_dict[pointJ] and safe_points[j] != pointI:
 					coordinates_dict[pointJ].append(pointI)
 				
-				if pointI == s or pointJ == s:
-					s_present = True
-					
-				if pointI == t or pointJ == t:
-					t_present = True
-								
-				if e not in minimum_convex_hull:
-					minimum_convex_hull.append(e)
+				if pointI not in minimum_convex_hull:
+					minimum_convex_hull.append(pointI)
+				if pointJ not in minimum_convex_hull:
+					minimum_convex_hull.append(pointJ)
+				
+	x = [p.x for p in minimum_convex_hull]
+	y = [p.y for p in minimum_convex_hull]
+	centroid = Coordinate(x=(sum(x) / len(minimum_convex_hull)), y=(sum(y) / len(minimum_convex_hull)))
+
+	sorted_minimum_convex_hull = sorted(minimum_convex_hull, key=functools.cmp_to_key(counterclockwise_sorting))
+				
+	#return sorted_minimum_convex_hull, coordinates_dict
+	return sorted_minimum_convex_hull
 	
-	path1 = []
-	path2 = []
+def armar_caminos(s,t,convex_hull):
+	idx_s = convex_hull.index(s)
+	idx_t = convex_hull.index(t)
+	
 	weight_1 = 0
 	weight_2 = 0
 	
-	path1.append(s)
-	path1.append(coordinates_dict[s][0])
+	if idx_t < idx_s:
+		path1 = convex_hull[idx_s:]
+		path1.extend(convex_hull[0:idx_t+1])
+	else:
+		path1 = convex_hull[idx_s:idx_t+1]
+    
+	path2 = []
 	path2.append(s)
-	path2.append(coordinates_dict[s][1])
 	
-	reached_t = False
+	if idx_t > idx_s:
+		if idx_s != 0:
+			path2.extend(convex_hull[:idx_s])
+			
+		if idx_t != len(convex_hull):
+			for i in range(len(convex_hull)-1,idx_t,-1):
+				path2.append(convex_hull[i])
+			
+	else:
+		if idx_s != 0:
+			for i in range(idx_s-1,idx_t,-1):
+				path2.append(convex_hull[i])
+	path2.append(t)
 	
-	while not reached_t:
-		last_element = path1[len(path1)-1]
-		next = coordinates_dict[last_element]
-		
-		for adj in next:
-			if adj not in path1:
-				path1.append(adj)
-				weight_1 += distance(last_element, adj)
-				
-			if adj == t:
-				reached_t = True
-				
-	reached_t = False
-	while not reached_t:
-		last_element = path2[len(path2)-1]
-		next = coordinates_dict[last_element]
-		
-		for adj in next:
-			if adj not in path2:
-				path2.append(adj)
-				weight_2 += distance(last_element, adj)
-				
-			if adj == t:
-				reached_t = True
-				
-	if not t_present or not s_present:
-		print("ERROR: Convex Hull does not contain source or tail.")
-		sys.exit(500)	
+	for i in range(1,len(path1)):
+		weight_1 += distance(path1[i-1],path1[i])	
+	for i in range(1,len(path2)):
+		weight_2 += distance(path2[i-1],path2[i])
 	
 	return (WeightedPath(path=path1,weight=weight_1), WeightedPath(path=path2,weight=weight_2))
 	
-def graham():
+def graham(s, t, safe_points):
 	print("graham")
 
-def division():
-	print("division")
-
+def division_conquista(s, t, safe_points):
+	#ordenar los puntos por su componente x
+	sorted_points = sorted(safe_points, key=get_key)
+	
+	result = divide(s,t,sorted_points)
+		
+	return result
+	
 if len(sys.argv) != 3 :
 	print("Invalid input.\nUsage: \n\t safepath inputFilepath F|G|D")
 	sys.exit(1)
@@ -204,23 +298,22 @@ for line in input:
 	coordinates = line.split(" ")
 	safe_points.append(Coordinate(x=int(coordinates[0]), y=int(coordinates[1])))
 
+coordinates_dict = { key: [] for key in safe_points}	
 s = safe_points[0]
 t = safe_points[1]
 
 if mode == 'F':
-	path1,path2 = fuerza_bruta(s, t, safe_points)		
-		
-	#g = Graph([])
-    #
-	#for edge in convex_hull:
-	#	g.add_edge2(edge)
-	#			
-	#path1=g.dijkstra(s, t)
-
+	convex_hull = fuerza_bruta(s, t, safe_points)
+	
+	if len(coordinates_dict[s]) == 0 or len(coordinates_dict[t]) == 0:
+		print("ERROR: Convex Hull does not contain source or tail.")
+		sys.exit(500)		
+	path1,path2=armar_caminos(s,t,convex_hull)
 elif mode == 'G':
-	graham()
+	graham(s, t, safe_points)
 elif mode == 'D':
-	division()
+	convex_hull=division_conquista(s, t, safe_points)
+	path1,path2=armar_caminos(s,t,convex_hull)
 else:
 	print("Method [%s] is not valid." % mode)
 	os._exit(-1)
