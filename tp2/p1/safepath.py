@@ -6,8 +6,8 @@ import math
 import os
 import operator
 import functools
-import numpy as np
 from collections import deque, namedtuple
+import grahamScan
 
 Edge = namedtuple('Edge', 'start, end, distance')
 Coordinate = namedtuple('Coordinate', 'x,y')
@@ -263,9 +263,6 @@ def armar_caminos(s,t,convex_hull):
 		weight_2 += distance(path2[i-1],path2[i])
 	
 	return (WeightedPath(path=path1,weight=weight_1), WeightedPath(path=path2,weight=weight_2))
-	
-def graham(s, t, safe_points):
-	print("graham")
 
 def division_conquista(s, t, safe_points):
 	#ordenar los puntos por su componente x
@@ -310,7 +307,8 @@ if mode == 'F':
 		sys.exit(500)		
 	path1,path2=armar_caminos(s,t,convex_hull)
 elif mode == 'G':
-	graham(s, t, safe_points)
+	convex_hull=grahamScan.convex_hull(safe_points)
+	path1,path2=armar_caminos(s,t,convex_hull)
 elif mode == 'D':
 	convex_hull=division_conquista(s, t, safe_points)
 	path1,path2=armar_caminos(s,t,convex_hull)
