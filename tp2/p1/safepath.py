@@ -13,7 +13,6 @@ Edge = namedtuple('Edge', 'start, end, distance')
 Coordinate = namedtuple('Coordinate', 'x,y')
 WeightedPath = namedtuple('WeightedPath', 'path,weight')
 
-coordinates_dict = {}
 centroid = Coordinate(0,0)
 
 #####		
@@ -60,16 +59,7 @@ def counterclockwise_sorting(item1, item2):
 	
 	return result
 
-def addCoordinates(a,b):
-	global coordinates_dict
-	
-	if a not in coordinates_dict[b]:
-		coordinates_dict[b].append(a)
-	if b not in coordinates_dict[a]:
-		coordinates_dict[a].append(b)
-		
 def merger(left_hull,right_hull):
-	global coordinates_dict
 	
 	len_left = len(left_hull)
 	len_right = len(right_hull)
@@ -133,15 +123,11 @@ def merger(left_hull,right_hull):
 		ind = (ind+1)%len_left
 		new_point = left_hull[ind]
 		ret.append(new_point)
-		addCoordinates(new_point, last_point)
-		
 		last_point = new_point
 
 	ind = lowerb
 	
 	new_point = right_hull[lowerb]
-	
-	addCoordinates(new_point, last_point)
 	
 	last_point = new_point
 	
@@ -150,15 +136,12 @@ def merger(left_hull,right_hull):
 		ind = (ind+1)%len_right
 		new_point = right_hull[ind]
 		ret.append(new_point)
-		addCoordinates(new_point, last_point)
 		last_point = new_point
-	
-		addCoordinates(left_hull[uppera], last_point)
 	
 	return ret
 	
 def divide(s,t,points):
-	if len(points) < 6:
+	if len(points) > 2 and len(points) <= 6:
 		return fuerza_bruta(s,t,points)
 	
 	half = len(safe_points)//2
@@ -168,16 +151,14 @@ def divide(s,t,points):
 	fuerza_bruta_der = divide(s,t,right)
 	fuerza_bruta_izq = divide(s,t,left)
 	
-	if (s not in coordinates_dict or len(coordinates_dict[s]) == 0):
+	if (s not in fuerza_bruta_der and s not in fuerza_bruta_izq):
 		print("ERROR: Convex Hull does not contain source.")
 		sys.exit(500)
 	
-	if (t not in coordinates_dict or len(coordinates_dict[t]) == 0):
+	if (t not in fuerza_bruta_izq and t not in fuerza_bruta_der):
 		print("ERROR: Convex Hull does not contain tail.")
 		sys.exit(500)
 	
-	coordinates_dict[s] = []
-		
 	merge = merger(fuerza_bruta_izq, fuerza_bruta_der)
 	
 	return merge
@@ -185,9 +166,8 @@ def divide(s,t,points):
 
 def fuerza_bruta(s, t, safe_points):	
 	global centroid
-	global coordinates_dict
 	minimum_convex_hull = []
-			
+	
 	for i in range(0, len(safe_points)):
 		for j in range(0, len(safe_points)):
 			if i == j:
@@ -206,25 +186,20 @@ def fuerza_bruta(s, t, safe_points):
 				if d < 0:
 					allPointsOnTheRight = False
 					break
-			
+					
 			if allPointsOnTheRight:
-				if pointJ not in coordinates_dict[pointI] and safe_points[i] != pointJ:
-					coordinates_dict[pointI].append(pointJ)
-				if pointI not in coordinates_dict[pointJ] and safe_points[j] != pointI:
-					coordinates_dict[pointJ].append(pointI)
-				
 				if pointI not in minimum_convex_hull:
 					minimum_convex_hull.append(pointI)
 				if pointJ not in minimum_convex_hull:
 					minimum_convex_hull.append(pointJ)
-				
+			
 	x = [p.x for p in minimum_convex_hull]
 	y = [p.y for p in minimum_convex_hull]
+	
 	centroid = Coordinate(x=(sum(x) / len(minimum_convex_hull)), y=(sum(y) / len(minimum_convex_hull)))
 
 	sorted_minimum_convex_hull = sorted(minimum_convex_hull, key=functools.cmp_to_key(counterclockwise_sorting))
 				
-	#return sorted_minimum_convex_hull, coordinates_dict
 	return sorted_minimum_convex_hull
 	
 def armar_caminos(s,t,convex_hull):
@@ -295,22 +270,32 @@ for line in input:
 	coordinates = line.split(" ")
 	safe_points.append(Coordinate(x=int(coordinates[0]), y=int(coordinates[1])))
 
-coordinates_dict = { key: [] for key in safe_points}	
 s = safe_points[0]
 t = safe_points[1]
 
 if mode == 'F':
 	convex_hull = fuerza_bruta(s, t, safe_points)
-	
-	if len(coordinates_dict[s]) == 0 or len(coordinates_dict[t]) == 0:
+		
+	if s not in convex_hull or t not in convex_hull:
 		print("ERROR: Convex Hull does not contain source or tail.")
-		sys.exit(500)		
+		sys.exit(500)
+	
 	path1,path2=armar_caminos(s,t,convex_hull)
+	
 elif mode == 'G':
 	convex_hull=grahamScan.convex_hull(safe_points)
+	
+	if s not in convex_hull or t not in convex_hull:
+		print("ERROR: Convex Hull does not contain source or tail.")
+		sys.exit(500)
+		
 	path1,path2=armar_caminos(s,t,convex_hull)
 elif mode == 'D':
 	convex_hull=division_conquista(s, t, safe_points)
+	
+	if s not in convex_hull or t not in convex_hull:
+		print("ERROR: Convex Hull does not contain source or tail.")
+		sys.exit(500)	
 	path1,path2=armar_caminos(s,t,convex_hull)
 else:
 	print("Method [%s] is not valid." % mode)
