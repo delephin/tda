@@ -80,12 +80,12 @@ def merger(left_hull,right_hull):
 	indb = idx_leftmost_b
 	done = False
 	while not done:
-		done = True
-				
-		while (orientation(right_hull[indb], left_hull[inda], left_hull[(inda+1)%len_left]) >= 0):
+		done = True	
+		
+		while (orientation(right_hull[indb], left_hull[inda], left_hull[(inda+1)%len_left]) > 0):
 			inda = (inda+1)%len_left
 			
-		while (orientation(left_hull[inda],right_hull[indb],right_hull[(len_right+indb-1)%len_right]) <= 0):
+		while (orientation(left_hull[inda],right_hull[indb],right_hull[(len_right+indb-1)%len_right]) < 0):
 			indb = (len_right+indb-1)%len_right
 			done = False
 		
@@ -101,10 +101,10 @@ def merger(left_hull,right_hull):
 	# finding the lower tangent 
 	while not done:
 		done = 1
-		while (orientation(left_hull[inda], right_hull[indb], right_hull[(indb+1)%len_right])>=0): 
+		while (orientation(left_hull[inda], right_hull[indb], right_hull[(indb+1)%len_right])>0): 
 			indb=(indb+1)%len_right 
 	
-		while orientation(right_hull[indb], left_hull[inda], left_hull[(len_left+inda-1)%len_left])<=0:
+		while orientation(right_hull[indb], left_hull[inda], left_hull[(len_left+inda-1)%len_left])<0:
 			inda=(len_left+inda-1)%len_left
 			done=0
 	
@@ -132,6 +132,7 @@ def merger(left_hull,right_hull):
 	last_point = new_point
 	
 	ret.append(right_hull[lowerb])
+	
 	while ind != upperb:
 		ind = (ind+1)%len_right
 		new_point = right_hull[ind]
@@ -141,7 +142,7 @@ def merger(left_hull,right_hull):
 	return ret
 	
 def divide(s,t,points):
-	if len(points) > 2 and len(points) <= 6:
+	if len(points) > 1 and len(points) <= 6:
 		return fuerza_bruta(s,t,points)
 	
 	half = len(safe_points)//2
@@ -150,7 +151,7 @@ def divide(s,t,points):
 
 	fuerza_bruta_der = divide(s,t,right)
 	fuerza_bruta_izq = divide(s,t,left)
-	
+		
 	if (s not in fuerza_bruta_der and s not in fuerza_bruta_izq):
 		print("ERROR: Convex Hull does not contain source.")
 		sys.exit(500)
@@ -220,7 +221,7 @@ def armar_caminos(s,t,convex_hull):
 	
 	if idx_t > idx_s:
 		if idx_s != 0:
-			path2.extend(convex_hull[:idx_s])
+			path2.extend(reversed(convex_hull[:idx_s]))
 			
 		if idx_t != len(convex_hull):
 			for i in range(len(convex_hull)-1,idx_t,-1):
