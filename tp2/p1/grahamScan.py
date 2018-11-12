@@ -29,6 +29,9 @@ def convex_hull(points):
     # - mientras gire a derecha, remuevo el último punto de la envoltura convexa
     for point in sorted_points[1:]:
         while det(hull[-2], hull[-1], point) <= 0:
-            del hull[-1]
+            if(len(hull) > 2):
+                del hull[-1]
+            else:
+                break
         hull.append(point)
     return hull
