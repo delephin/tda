@@ -1,0 +1,90 @@
+# capacidades x tramo [vagones] = estacion_i,estacion_j,capacidad
+Perú,Plaza de Mayo,50
+Perú,Catedral,50
+Piedras,Perú,50
+Lima,Avenida de Mayo,50
+Lima,Piedras,50
+Sáenz Peña,Lima,50
+Congreso,Sáenz Peña,50
+Pasco,Congreso,50
+Alberti,Pasco,50
+Plaza Miserere,Alberti,50
+Plaza Miserere,Once,50
+Loria,Plaza Miserere,50
+Castro Barros,Loria,50
+Río de Janeiro,Castro Barros,50
+Acoyte,Río de Janeiro,50
+Primera Junta,Acoyte,50
+Puan,Primera Junta,50
+Carabobo,Puan,50
+San José de Flores,Carabobo,50
+San Pedrito,San José de Flores,50
+Florida,Alem,50
+Pellegrini,Florida,50
+Uruguay,Pellegrini,50
+CallaoB,Uruguay,50
+Pasteur,CallaoB,50
+PueyrredónB,Pasteur,50
+PueyrredónB,Corrientes,50
+Gardel,PueyrredónB,50
+Medrano,Gardel,50
+Gallardo,Medrano,50
+Malabia,Gallardo,50
+Dorrego,Malabia,50
+Lacroze,Dorrego,50
+Tronador,Lacroze,50
+Los Incas,Tronador,50
+Echeverría,Los Incas,50
+Rosas,Echeverría,50
+San Martín,Retiro,50
+Lavalle,San Martín,50
+Diagonal Norte,Lavalle,50
+Avenida de Mayo,Diagonal Norte,50
+Moreno,Avenida de Mayo,50
+Independencia,Moreno,50
+San Juan,Independencia,50
+Constitución,San Juan,50
+9 de Julio,Catedral,50
+9 de Julio,Pellegrini,50
+9 de Julio,Diagonal Norte,50
+Tribunales,9 de Julio,50
+CallaoD,Tribunales,50
+Facultad de Medicina,CallaoD,50
+PueyrredónD,Facultad de Medicina,50
+PueyrredónD,Santa Fe,50
+Agüero,PueyrredónD,50
+Bulnes,Agüero,50
+Scalabrini Ortiz,Bulnes,50
+Plaza Italia,Scalabrini Ortiz,50
+Palermo,Plaza Italia,50
+Carranza,Palermo,50
+Olleros,Carranza,50
+Hernández,Olleros,50
+Juramento,Hernández,50
+Congreso de Tucumán,Juramento,50
+Bolívar,Perú,50
+Belgrano,Bolívar,50
+Independencia,Belgrano,50
+San José,Independencia,50
+Entre Ríos,San José,50
+Pichincha,Entre Ríos,50
+Jujuy,Pichincha,50
+Jujuy,Humberto I,50
+Urquiza,Jujuy,50
+Boedo,Urquiza,50
+Avenida La Plata,Boedo,50
+Moreno,Avenida La Plata,50
+Emilio Mitre,Moreno,50
+Medalla Milagrosa,Emilio Mitre,50
+Varela,Medalla Milagrosa,50
+Plaza de los Virreyes,Varela,50
+Las Heras,Facultad de Derecho,50
+Santa Fe,Las Heras,50
+Corrientes,Santa Fe,50
+Once,Corrientes,50
+Venezuela,Once,50
+Humberto I,Venezuela,50
+Inclán,Humberto I,50
+Caseros,Inclán,50
+Parque Patricios,Caseros,50
+Hospitales,Parque Patricios,50
