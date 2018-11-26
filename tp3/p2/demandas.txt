@@ -1,0 +1,18 @@
+# demandas estacion [personas] =  estacion,f_in,f_out
+Rosas,300,600
+Echeverría,600,800
+Los Incas,800,800
+Tronador,800,800
+Lacroze,800,800
+Dorrego,800,800
+Malabia,800,800
+Gallardo,800,800
+Medrano,800,800
+Gardel,800,800
+PueyrredónB,800,800
+Pasteur,800,800
+CallaoB,800,800
+Uruguay,800,800
+Pellegrini,800,800
+Florida,800,800
+Alem,1200,1200

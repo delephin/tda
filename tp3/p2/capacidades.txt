@@ -1,0 +1,17 @@
+# capacidades x tramo [vagones] = estacion_i,estacion_j,capacidad
+Rosas,Echeverría,3
+Echeverría,Los Incas,3
+Los Incas,Tronador,2
+Tronador,Lacroze,2
+Lacroze,Dorrego,2
+Dorrego,Malabia,2
+Malabia,Gallardo,2
+Gallardo,Medrano,2
+Medrano,Gardel,2
+Gardel,PueyrredónB,2
+PueyrredónB,Pasteur,2
+Pasteur,CallaoB,2
+CallaoB,Uruguay,2
+Uruguay,Pellegrini,2
+Pellegrini,Florida,2
+Florida,Alem,2
