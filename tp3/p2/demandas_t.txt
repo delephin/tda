@@ -1,0 +1,86 @@
+# demandas estacion [personas] = estacion,f_in,f_out
+Plaza de Mayo,1500,1000
+Perú,1000,500
+Piedras,700,1000
+Lima,400,800
+Sáenz Peña,900,900
+Congreso,2000,2000
+Pasco,100,200
+Alberti,400,400
+Plaza Miserere,600,600
+Loria,300,100
+Castro Barros,600,900
+Río de Janeiro,600,600
+Acoyte,600,700
+Primera Junta,700,500
+Puan,550,600
+Carabobo,200,200
+San José de Flores,100,100
+San Pedrito,50,200
+Alem,1000,0
+Florida,500,500
+Pellegrini,1000,1000
+Uruguay,500,600
+CallaoB,800,900
+Pasteur,500,300
+PueyrredónB,700,800
+Gardel,400,600
+Medrano,500,200
+Gallardo,400,400
+Malabia,350,350
+Dorrego,200,400
+Lacroze,100,300
+Tronador,100,100
+Los Incas,300,300
+Echeverría,200,650
+Rosas,100,250
+Retiro,1000,400
+San Martín,500,800
+Lavalle,300,600
+Diagonal Norte,400,400
+Avenida de Mayo,500,700
+Moreno,350,150
+Independencia,450,500
+San Juan,200,50
+Constitución,100,200
+Catedral,1000,500
+9 de Julio,1500,1400
+Tribunales,700,400
+CallaoD,800,500
+Facultad de Medicina,600,200
+PueyrredónD,600,1200
+Agüero,700,700
+Bulnes,500,500
+Scalabrini Ortiz,600,600
+Plaza Italia,300,300
+Palermo,500,200
+Carranza,200,700
+Olleros,100,500
+Hernández,300,300
+Juramento,500,500
+Congreso de Tucumán,100,500
+Bolívar,1000,1000
+Belgrano,700,700
+San José,700,400
+Entre Ríos,400,400
+Pichincha,650,650
+Jujuy,200,200
+Urquiza,600,600
+Boedo,700,700
+Avenida La Plata,400,400
+Moreno,250,250
+Emilio Mitre,400,600
+Medalla Milagrosa,200,100
+Varela,400,300
+Plaza de los Virreyes,200,500
+Facultad de Derecho,500,300
+Las Heras,600,200
+Santa Fe,100,200
+Corrientes,200,200
+Once,300,300
+Venezuela,400,400
+Humberto I,600,600
+Inclán,300,300
+Caseros,500,500
+Parque Patricios,100,400
+Hospitales,450,650
